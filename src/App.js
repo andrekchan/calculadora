@@ -24,9 +24,9 @@ function App() {
       <Button text="/"/>
       <Button text="*"/>
 
-      <Keypad/>
+      {/*<Keypad/>
       <OperationButtons/>
-      <EqualButton/>
+      <EqualButton/> */}
     </div>
   );
 }
