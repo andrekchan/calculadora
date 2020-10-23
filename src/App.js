@@ -6,16 +6,23 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      currentOperand: '0'
+      currentOperand: ''
     }
   }
   render(){
     return (
       <div className="App">
-        <Display value={this,state.correntOperand}/>
+        <Display value={this.state.correntOperand}/>
         {/* <Display value="2"/> */}
-
-        <Button text="0"/>
+        
+        <Button text="0" clicado={() => {
+            this.setState(
+              {
+                currentOperand: this.state.currentOperand + "0"
+              }
+            );
+          }
+        } />
         <Button text="1"/>
         <Button text="2"/>
         <Button text="3"/>
@@ -41,7 +48,7 @@ class App extends Component{
 
 function Button(props) {
   return(
-    <button onClick={console.log('Clicado')}>{props.text}</button>
+    <button onClick={props.clicado}>{props.text}</button>
   )
 }
 
