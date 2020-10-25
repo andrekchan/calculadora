@@ -53,7 +53,6 @@ class App extends Component {
     this.addNumber = this.addNumber.bind(this);
     this.clear = this.clear.bind(this);
     this.addOperation = this.addOperation.bind(this);
-    this.memoria = this.memoria.bind(this);
   }
 
   addNumber(number) {
@@ -122,36 +121,8 @@ class App extends Component {
     });
   }
 
-  memoria(mem){
-    this.setState(state => {
-      let m = ""
-      switch (mem){
-        case ("MC"):
-          state.memo = []
-          state.currentOperand = ""
-          break
-        case ("MR"):
-          state.currentOperand = state.memo.pop()
-          break
-        case ("MS"):
-          m = parseFloat(state.currentOperand)
-          const mbla = getDisplayNumber(m)
-          state.memo.push(mbla)
-          break
-        case ("M+"):
-          m = parseFloat(state.memo.pop()) + parseFloat(state.currentOperand)
-          const mlinha = getDisplayNumber(m)
-          state.memo.push(mlinha)
-          break
-        default:
-          m = ""
-      }
-      return{
-        currentOperand: this.state.currentOperand,
-        memo: this.state.memo,
-      }
-    })
-  }
+
+
 
   render() {
     return (
@@ -160,10 +131,7 @@ class App extends Component {
           <Display value={this.state.previousOperand} />
           <Display value={this.state.currentOperand} />
         </div>
-        <Button text="MC" aoClicar={() => this.memoria("MC")} />
-        <Button text="MR" aoClicar={() => this.memoria("MR")} />
-        <Button text="MS" aoClicar={() => this.memoria("MS")} />
-        <Button text="M+" aoClicar={() => this.memoria("M+")} />
+
         <Button text="+" aoClicar={() => this.addOperation("+")}/>
         <Button text="-" aoClicar={() => this.addOperation("-")}/>
         <Button text="*" aoClicar={() => this.addOperation("*")}/>
