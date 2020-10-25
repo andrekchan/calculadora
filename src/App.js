@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function Display(props) {
@@ -16,7 +15,16 @@ function Button(props) {
   );
 }
 
+function ButtonEqual(props) {
+  return (
+    <button class="Equal" onClick={props.aoClicar}>{props.text}</button>
+  );
+}
+
 function getDisplayNumber(number) {
+  if (isNaN(number)){
+    return "Ops, ocorreu um erro. Por favor, apertar C"
+  }
   const stringNumber = number.toString();
   const integerDigits = parseFloat(stringNumber.split('.')[0]);
   const decimalDigits = stringNumber.split('.')[1];
@@ -38,51 +46,150 @@ class App extends Component {
     super(props);
     this.state = {
       currentOperand: "",
-      lista: [1, 2, 3, 4]
+      previousOperand: "",
+      operation: "",
+      memo:[],
     };
     this.addNumber = this.addNumber.bind(this);
-    console.log(
-      getDisplayNumber('1231213')
-    );
+    this.clear = this.clear.bind(this);
+    this.addOperation = this.addOperation.bind(this);
+    this.memoria = this.memoria.bind(this);
   }
 
   addNumber(number) {
     this.setState(state => {
-      return {        
+      return {
         currentOperand: state.currentOperand + number,
       };
     });
   }
 
+  addOperation (Operacao) {
+    this.setState(state => {
+        if (state.operation !== ""){
+          this.computar()
+        return{
+          previousOperand: state.currentOperand + Operacao,
+          currentOperand: '',
+          operation: Operacao,
+        }
+      }
+        else {return{
+        previousOperand: state.currentOperand + Operacao,
+        currentOperand: '',
+        operation: Operacao,
+      }}
+    });
+  }
+
+  computar () {
+    this.setState(state => {
+      let computacao = ""
+      const prev = parseFloat(state.previousOperand)
+      const current = parseFloat(state.currentOperand)
+      const sksksk = state.operation
+      switch (sksksk){
+        case '+':
+          computacao = prev + current
+          break
+        case '-':
+          computacao = prev - current
+          break
+        case '*':
+          computacao = prev * current
+          break
+        case '/':
+          computacao = prev / current
+          break
+        default:
+          computacao = ""        
+        }
+      const computation = getDisplayNumber(computacao)
+      return{
+        currentOperand: computation,
+        operation: '',
+        previousOperand: '',
+        }
+    });
+  }
+  
+
+  clear() {
+    this.setState(state =>{
+      return{
+        currentOperand: "",
+      }
+    });
+  }
+
+  memoria(mem){
+    this.setState(state => {
+      let m = ""
+      switch (mem){
+        case ("MC"):
+          state.memo = []
+          state.currentOperand = ""
+          break
+        case ("MR"):
+          state.currentOperand = state.memo.pop()
+          break
+        case ("MS"):
+          m = parseFloat(state.currentOperand)
+          const mbla = getDisplayNumber(m)
+          state.memo.push(mbla)
+          break
+        case ("M+"):
+          m = parseFloat(state.memo.pop()) + parseFloat(state.currentOperand)
+          const mlinha = getDisplayNumber(m)
+          state.memo.push(mlinha)
+          break
+        default:
+          m = ""
+      }
+      return{
+        currentOperand: this.state.currentOperand,
+        memo: this.state.memo,
+      }
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        <Display value={this.state.currentOperand} />
-        {/* <Display value="2"/> */}
-        <Button text="0" aoClicar={() => this.addNumber("0")} />
-        <Button text="1" aoClicar={() => this.addNumber("1")} />
-        <Button text="2" aoClicar={() => this.addNumber("2")} />
-        <Button text="3" aoClicar={() => this.addNumber("3")} />
-        <Button text="4" aoClicar={() => this.addNumber("4")} />
-        <Button text="5" aoClicar={() => this.addNumber("5")} />
-        <Button text="6" aoClicar={() => this.addNumber("6")} />
+        <div class="Output">
+          <Display value={this.state.previousOperand} />
+          <Display value={this.state.currentOperand} />
+        </div>
+        <Button text="MC" aoClicar={() => this.memoria("MC")} />
+        <Button text="MR" aoClicar={() => this.memoria("MR")} />
+        <Button text="MS" aoClicar={() => this.memoria("MS")} />
+        <Button text="M+" aoClicar={() => this.memoria("M+")} />
+        <Button text="+" aoClicar={() => this.addOperation("+")}/>
+        <Button text="-" aoClicar={() => this.addOperation("-")}/>
+        <Button text="*" aoClicar={() => this.addOperation("*")}/>
+        <Button text="/" aoClicar={() => this.addOperation("/")} />
         <Button text="7" aoClicar={() => this.addNumber("7")} />
         <Button text="8" aoClicar={() => this.addNumber("8")} />
         <Button text="9" aoClicar={() => this.addNumber("9")} />
-        <Button text="," aoClicar={() => this.addNumber(",")} />
-        <Button text="+" />
-        <Button text="-" />
-        <Button text="/" />
-        <Button text="*" />
+        <ButtonEqual text="=" aoClicar={() => this.computar()}/>
+        <Button text="4" aoClicar={() => this.addNumber("4")} />
+        <Button text="5" aoClicar={() => this.addNumber("5")} />
+        <Button text="6" aoClicar={() => this.addNumber("6")} />
+        <Button text="1" aoClicar={() => this.addNumber("1")} />
+        <Button text="2" aoClicar={() => this.addNumber("2")} />
+        <Button text="3" aoClicar={() => this.addNumber("3")} />
+        <Button text="0" aoClicar={() => this.addNumber("0")} />
+        <Button text="." aoClicar={() => this.addNumber(".")} />
+        <Button text="C" aoClicar={() => this.clear()} />
+        <ul>       
         {
-          this.state.lista.map(
+          this.state.memo.map(
             (val) => <h1>{val}</h1>
           )
         }
-        {/* <Keypad/> */}
-        {/* <OperationButtons/> */}
-        {/* <EqualButton/> */}
-      </div>
+        </ul>
+      </div> 
+
     );
   }
 }
