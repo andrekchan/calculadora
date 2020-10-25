@@ -53,6 +53,7 @@ class App extends Component {
     this.addNumber = this.addNumber.bind(this);
     this.clear = this.clear.bind(this);
     this.addOperation = this.addOperation.bind(this);
+    this.memoria = this.memoria.bind(this);
   }
 
   addNumber(number) {
@@ -121,7 +122,33 @@ class App extends Component {
     });
   }
 
-
+  memoria(mem){
+    if(mem === "MC"){
+      this.setState(state => {
+          return{
+            memo: [],
+            currentOperand: "",
+          };        
+        }
+      );}
+      else if(mem === "MR"){
+        let e = this.state.memo.pop();
+        this.setState(state => {
+            return{
+              currentOperand: e,      
+            };        
+          }
+        );}
+        else if(mem === "MS"){
+          this.state.memo.push(this.state.currentOperand);
+          this.forceUpdate()
+        }
+        else if(mem === "M+"){
+          let m = parseFloat(this.state.memo.pop()) + parseFloat(this.state.currentOperand);
+          this.forceUpdate();
+          this.state.memo.push(m)          
+          }
+    }
 
 
   render() {
@@ -131,7 +158,10 @@ class App extends Component {
           <Display value={this.state.previousOperand} />
           <Display value={this.state.currentOperand} />
         </div>
-
+        <Button text="MC" aoClicar={() => this.memoria("MC")} />
+        <Button text="MR" aoClicar={() => this.memoria("MR")} />
+        <Button text="MS" aoClicar={() => this.memoria("MS")} />
+        <Button text="M+" aoClicar={() => this.memoria("M+")} />
         <Button text="+" aoClicar={() => this.addOperation("+")}/>
         <Button text="-" aoClicar={() => this.addOperation("-")}/>
         <Button text="*" aoClicar={() => this.addOperation("*")}/>
